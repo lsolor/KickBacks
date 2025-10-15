@@ -1,0 +1,25 @@
+services:
+  db:
+    image: postgres:16-bookworm
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORK=password
+      - POSTGRES_DB=mydb
+      #volumes
+      # - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  cache:
+    image: redis:7-bookworm
+    # volumes:
+    # - redis-data:/data
+    ports:
+      - "6379:6379"
+
+  api:
+    build: .
+    ports: -"8000:8000"
+    depends_on:
+      - db
+      - cache

@@ -1,27 +1,57 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
-name = "KickBacks"
+name = "kickback"
 version = "0.1.0"
-description = "Add your description here"
+description = "Kickback API service"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "alembic>=1.17.0",
-    "fastapi[standard]>=0.119.0",
-    "pydantic>=2.12.2",
-    "sqlalchemy>=2.0.44",
+  "fastapi",
+  "uvicorn[standard]",
+  "SQLAlchemy>=2.0.0",
+  "asyncpg",
+  "aiosqlite",
+  "greenlet",
+  "alembic",
+  "redis>=5",
+  "pydantic>=2",
+  "pydantic-settings",
+  "tenacity",
+  "typer[all]>=0.9.0",
+  "httpx",
+  "pytest",
+  "pytest-asyncio",
 ]
 
-[tool.black]
-line-length = 100
-target-version = ["py312"]
+[project.optional-dependencies]
+dev = [
+  "ruff",
+  "mypy",
+]
+
+[project.scripts]
+kickback-dev = "kickback.cli:dev"
+kickback-seed = "kickback.cli:seed"
+kickback-projector = "kickback.cli:projector"
+kickback-create-key = "kickback.cli:create_key"
 
 [tool.ruff]
-target-version = "py312"
 line-length = 100
-fix = true
-src = ["app", "src", "tests"]
+target-version = "py312"
+lint.select = ["E","F","I","UP","ASYNC","B","TCH","RUF"]
 
-[tool.ruff.lint]
-select = ["E", "F", "W", "I", "B", "UP", "N"]
-ignore = ["E203", "E266"]
-preview = false
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_unused_ignores = true
+disallow_untyped_defs = true
+disallow_any_generics = true
+no_implicit_optional = true
+plugins = ["pydantic.mypy"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+asyncio_mode = "auto"
